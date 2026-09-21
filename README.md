@@ -618,3 +618,82 @@ public class Visitante {
 
 
 
+package com.example.igrejaapi;
+
+import org.springframework.web.bind.annotation.*;
+
+        import java.util.ArrayList;
+import java.util.List;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
+
+@RestController
+public class Visitantecontroller {
+
+    private List<Visitante> visitantes = new ArrayList<>();
+
+    private int proximoId = 1;
+
+    @GetMapping("/visitantes")
+    public List<Visitante> visitantes() {
+
+        return visitantes;
+    }
+
+    @GetMapping("/visitantes/{id}")
+    public Visitante buscarVisitante(@PathVariable int id) {
+
+        for (Visitante visitante : visitantes) {
+            if (visitante.getId() == id) {
+                return visitante;
+            }
+        }
+        throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Visitante não encontrado"
+        );
+    }
+
+    @PostMapping("/visitantes")
+    public Visitante cadastrarVisitante(@RequestBody Visitante visitante) {
+
+        visitante.setId(proximoId);
+        proximoId++;
+
+        visitantes.add(visitante);
+
+        return visitante;
+
+    }
+
+    @DeleteMapping("/visitantes/{id}")
+    public void excluirVisitante(@PathVariable int id) {
+
+        visitantes.removeIf(visitante -> visitante.getId() == id);
+    }
+
+    @PutMapping("/visitantes/{id}")
+    public Visitante editarVisitante(@PathVariable int id, @RequestBody Visitante novoVisitante) {
+
+        for (Visitante visitante : visitantes) {
+
+            if (visitante.getId() == id) {
+
+                visitante.setNome(novoVisitante.getNome());
+                visitante.setTelefone(novoVisitante.getTelefone());
+                visitante.setCidade(novoVisitante.getCidade());
+
+                return visitante;
+            }
+        }
+        throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Visitante não encontrado"
+        );
+    }
+}
+
+
+
+
+
