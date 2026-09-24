@@ -693,7 +693,89 @@ public class Visitantecontroller {
     }
 }
 
+// visitanteservice
 
+package com.example.igrejaapi.Service;
+
+import org.springframework.stereotype.Service;
+import com.example.igrejaapi.repository.VisitanteRepository;
+import com.example.igrejaapi.Visitante;
+
+import java.util.List;
+
+@Service
+public class Visitanteservice {
+
+    private VisitanteRepository repository;
+    private int proximoId = 1;
+
+    public Visitanteservice(VisitanteRepository repository) {
+        this.repository = repository;
+    }
+
+    public List<Visitante> listar() {
+        return repository.listar();
+    }
+
+    public void salvar(Visitante visitante) {
+
+        visitante.setId(proximoId);
+        proximoId++;
+
+        repository.salvar(visitante);
+    }
+
+    public Visitante buscarPorId(int id) {
+        return repository.buscarPorId(id);
+    }
+
+    public void excluir(int id) {
+        repository.excluir(id);
+    }
+}
+
+
+//Visitanterepository
+
+
+package com.example.igrejaapi.repository;
+
+import com.example.igrejaapi.Visitante;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Repository
+public class VisitanteRepository {
+
+    private List<Visitante> visitantes = new ArrayList<>();
+
+    public List<Visitante> listar() {
+        return visitantes;
+    }
+
+    public void salvar(Visitante visitante) {
+        visitantes.add(visitante);
+    }
+
+    public Visitante buscarPorId(int id) {
+
+        for (Visitante visitante : visitantes) {
+            if (visitante.getId() == id) {
+                return visitante;
+            }
+        }
+
+        return null;
+    }
+    public void excluir(int id) {
+
+        visitantes.removeIf(visitante -> visitante.getId() == id);
+    }
+
+
+}
 
 
 
